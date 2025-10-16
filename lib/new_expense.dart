@@ -33,16 +33,40 @@ class _NewExpensesState extends State<NewExpense>{
               label: Text("Title")
             ),
           ),
-          TextField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              prefixText: "\$",
-              label: Text("Amount")
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    prefixText: "\$",
+                    label: Text("Amount")
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16,),
+              Expanded(child: 
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Selected Date"),
+                    IconButton(
+                      onPressed: (){}, 
+                      icon: Icon(Icons.calendar_month)
+                      ),
+                  ],
+              )),
+            ],
           ),
             Row(
               children: [
+                Spacer(),
+                ElevatedButton(
+                  onPressed: (){Navigator.pop(context);}, 
+                  child: Text("Cancel")
+                  ),
                 ElevatedButton(
                 onPressed: (){
                   print(_titleController.text);
