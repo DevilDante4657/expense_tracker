@@ -5,7 +5,8 @@ import 'package:intl/intl.dart';
 final formatter = DateFormat.yMd();
 
 class NewExpense extends StatefulWidget{
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+  final void Function(Expense expense) onAddExpense;
   
   @override
   State<NewExpense> createState() {
@@ -49,6 +50,13 @@ class _NewExpensesState extends State<NewExpense>{
         );
         return;
       }
+      widget.onAddExpense(Expense(
+        title: _titleController.text, 
+        amount: enteredAmount, 
+        date: _selectedDate!, 
+        category: _selectedCategory,
+        )
+        );
     }
   void _presentDatePicker() async{
     final now = DateTime.now();
@@ -67,7 +75,7 @@ class _NewExpensesState extends State<NewExpense>{
   @override
   Widget build(BuildContext context){
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 48, 16, 48),
       child: Column(
         children: [
           TextField(
@@ -86,11 +94,7 @@ class _NewExpensesState extends State<NewExpense>{
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     prefixText: "\$",
-                    label: Text(
-                      _selectedDate == null
-                          ? 'Select A Date'
-                          : formatter.format(_selectedDate!)
-                          ),
+                    label: Text("Amount")
                   ),
                 ),
               ),
@@ -100,7 +104,11 @@ class _NewExpensesState extends State<NewExpense>{
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Selected Date"),
+                    Text(
+                      _selectedDate == null
+                          ? 'Select A Date'
+                          : formatter.format(_selectedDate!)
+                          ),
                     IconButton(
                       onPressed: _presentDatePicker, 
                       icon: Icon(Icons.calendar_month)

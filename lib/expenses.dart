@@ -17,10 +17,17 @@ class _ExpensesState extends State<Expenses> {
   void _openAddExpenseOverlay(){
     showModalBottomSheet(
       context: context, 
-      builder: (ctx) => NewExpense()
+      builder: (ctx) => NewExpense(onAddExpense: _addExpense,),
+      isScrollControlled: true,
       );
   }
-  final List<Expense> _registeredExpense = [
+
+  void _addExpense(Expense expense){
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+  final List<Expense> _registeredExpenses = [
     Expense(
       title: 'Cheeseburger',
       amount: 12.45,
@@ -54,7 +61,7 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           Text("Chart"),
-          Expanded(child: ExpensesList(expenses: _registeredExpense))
+          Expanded(child: ExpensesList(expenses: _registeredExpenses))
         ],
       ),
     );
