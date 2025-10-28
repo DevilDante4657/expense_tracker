@@ -17,6 +17,7 @@ class _NewExpensesState extends State<NewExpense>{
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime ? _selectedDate;
+  Category _selectedCategory = Category.leisure;
 
   @override
   void dispose(){
@@ -25,6 +26,30 @@ class _NewExpensesState extends State<NewExpense>{
     super.dispose();
   }
 
+  void _submitExpenseData(){
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <=0;
+    if(_titleController.text.trim().isEmpty || amountIsInvalid || _selectedDate == null)
+    {
+      showDialog(
+        context: context, 
+        builder:(ctx) => AlertDialog(
+          title: const Text("Invalid Input!"),
+          content: const Text("Please make sure to have a valid Title, Date, and Amount!"),
+          actions: [
+            TextButton(
+              onPressed: ()
+              {
+                Navigator.pop(ctx);
+              }, 
+              child: const Text("Okay!"),
+              ),
+          ],
+        ),
+        );
+        return;
+      }
+    }
   void _presentDatePicker() async{
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
@@ -87,18 +112,25 @@ class _NewExpensesState extends State<NewExpense>{
             Row(
               children: [
                 DropdownButton(
+                  value: _selectedCategory,
                   items: Category.values.map(
                     (category) => DropdownMenuItem(
-                      child: Text(category.name.toString(),),),
+                      value: category,
+                      child: Text(category.name.toUpperCase(),),),
                   ).toList(), 
-                  onChanged: (value){}),
+                  onChanged: (value){
+                    if(value == null)
+                    {
+                      return;
+                    }
+                  }),
                 Spacer(),
                 ElevatedButton(
                   onPressed: (){Navigator.pop(context);}, 
                   child: Text("Cancel")
                   ),
                 ElevatedButton(
-                onPressed: (){}, 
+                onPressed: _submitExpenseData, 
                 child: Text("Save Expense"))
               ],
               ),
