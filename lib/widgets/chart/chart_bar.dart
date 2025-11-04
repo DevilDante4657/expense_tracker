@@ -20,6 +20,5 @@ class ChartBar extends StatelessWidget {
       ),
       ),
     );
-    return Text("Bar");
   }
 }
